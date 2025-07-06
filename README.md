@@ -6,7 +6,7 @@ The tool will be accepting some configuration files that must describe some rule
 and automatically will check if rules aren't vialoted. Examples of such rules are:
 - Repository should have only one `.editorconfig` in specific place and this file must be equal to template
 that accepted company-wide
-- All .NET projects should reference `StyleCop.Analyzer` package (to enforce styleguides that are descibed in `.editorconfig`, for example)
+- All .NET projects should reference `StyleCop.Analyzer` package (to enforce styleguides that are described in `.editorconfig`, for example)
 - All source code must be in `src` folder relative to repository root
 - Other restrictive rules that will enforce cross-repository consistency
 
@@ -21,7 +21,7 @@ I want this tool to be integrated in CI as simple as possible:
 I see the usage of the tool in CI in this way:
 
 ```bash
-wget -O repo-analyzer.sh https://repo-analyzer.com/repo-analyzer-latest.sh
+wget -O repo-analyzer.sh https://repo-analyzer.com/repo-analyzer-linux-latest.sh
 chmod +x repo-analyzer.sh
 ./repo-analyzer.sh --ruleset /volume/dotnet-rulesets.json
 ```
@@ -29,5 +29,11 @@ chmod +x repo-analyzer.sh
 With output similar to:
 
 ```
+34 rules being checked:
+- <rule-name-1>: OK
+- <rule-name-2>: OK
+- ...
+- <rule-name-10>: Not all source code is in `src` folder
 
+Exit Code 1
 ```
