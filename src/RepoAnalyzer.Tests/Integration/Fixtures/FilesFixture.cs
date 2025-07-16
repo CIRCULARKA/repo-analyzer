@@ -5,13 +5,14 @@ namespace RepoAnalyzer.Tests.Integration.Fixtures;
 /// </summary>
 public class FakeFilesHierarchy
 {
-    private readonly string _filesHierarchy;
-    private readonly char _depthMarker;
+    private readonly Lines _lines;
+    private readonly string _location;
 
     /// <summary>
     /// Creates files hierarchy according to its string representation
     /// </summary>
     /// <param name="filesHierarchy">String representation of a hierarchy of files</param>
+    /// <param name="location">Root location of files hierarchy</param>
     /// <remarks>
     /// Valid string representation is (if depth marker is '-'):
     /// @"
@@ -24,10 +25,10 @@ public class FakeFilesHierarchy
     ///     ...
     /// "
     /// </remarks>
-    public FakeFilesHierarchy(string filesHierarchy, char depthMarker)
+    public FakeFilesHierarchy(Lines lines, string location)
     {
-        _filesHierarchy = filesHierarchy;
-        _depthMarker = depthMarker;
+        _lines = lines;
+        _location = location;
     }
 
     /// <summary>
@@ -35,24 +36,51 @@ public class FakeFilesHierarchy
     /// </summary>
     public void InitializeHierarchy()
     {
-        var textLines = _filesHierarchy.Split(System.Environment.NewLine);
+        CreateFilesAndFolders(_lines, _location, 0);
+    }
 
-        var lines = new Lines(textLines, _depthMarker).GetLines();
+    /// <summary>
+    /// Creates files and folders at specified depth level recursively
+    /// </summary>
+    /// <param name="lines">Lines that descibe files and folders</param>
+    /// <param name="root">Location relative to files should be created</param>
+    /// <param name="depth">Depth of files in files hierarchy</param>
+    private void CreateFilesAndFolders(Lines lines, string root, int depth)
+    {
+        var currentDepthFiles = lines.Where(l => l.DoesRepresentFile() && depth == l.Depth);
 
-        foreach (var line in lines)
-        {
-            if (line.DoesRepresentFile())
-        }
+        CreateFiles(root, currentDepthFiles.Select(f => f.Name).ToArray());
+
+        var currentDepthFolders = lines.Where(l => l.DoesRepresentFile() is false && depth == l.Depth);
+
+        if (currentDepthFiles.Count() == 0 && currentDepthFolders.Count() == 0)
+            return;
+
+        foreach (var f in currentDepthFolders)
+            CreateFilesAndFolders(lines, Path.Combine(root, f.Name), depth + 1);
+    }
+
+    /// <summary>
+    /// Creates files in specified folder
+    /// </summary>
+    /// <param name="folderPath">Path to folder</param>
+    /// <param name="filenames">Names of files to create</param>
+    private void CreateFiles(string folderPath, string[] filenames)
+    {
+        foreach (var f in filenames)
+            File.Create(Path.Combine(folderPath, f));
     }
 }
 
 /// <summary>
 /// A collection of string representations of files or folders in files hierarchy
 /// </summary>
-public class Lines
+public class Lines : IEnumerable<Line>, IEnumerator<Line>
 {
+    private readonly IEnumerator<Line> _lines;
     private readonly string[] _textLines;
     private readonly char _depthMarker;
+    private bool _disposed;
 
     /// <summary>
     /// Creates collection of lines
@@ -60,18 +88,39 @@ public class Lines
     /// <param name="textLines">Text lines representations</param>
     public Lines(string[] textLines, char depthMarker)
     {
+        _lines = CreateLines(textLines).GetEnumerator();
         _textLines = textLines;
         _depthMarker = depthMarker;
     }
 
+#region Enumrable implementation
+
+    IEnumerator<Line> IEnumerable<Line>.GetEnumerator() => _lines;
+
+    IEnumerator IEnumerable.GetEnumerator() => _lines;
+
+    Line IEnumerator<Line>.Current => _lines.Current;
+
+    object IEnumerator.Current => _lines.Current;
+
+    bool IEnumerator.MoveNext() => _lines.MoveNext();
+
+    void IEnumerator.Reset() =>
+        _lines.Reset();
+
+    public void Dispose() =>
+        _lines.Dispose();
+
+#endregion
+
     /// <summary>
     /// Creates the collection of lines. First lines goes first in the list
     /// </summary>
-    public List<Line> GetLines()
+    /// <param name="textLines">
+    /// Files representations in a text form. Each line represents file or folder
+    /// </param>
+    private List<Line> CreateLines(string[] textLines)
     {
-        if (_textLines.Length == 0)
-            throw new InvalidOperationException("Lines must not be empty");
-
         var lines = new List<Line>();
         var lastLine = new Line(_textLines.Last(), _depthMarker, nextLine: null);
         lines.Add(lastLine);
@@ -80,95 +129,5 @@ public class Lines
             lines.Insert(0, new Line(_textLines[i], _depthMarker, nextLine: lines[i + 1]));
 
         return lines;
-    }
-}
-
-/// <summary>
-/// String representation that describes a file or a folder
-/// </summary>
-public class Line
-{
-    private readonly string _line;
-    private readonly char _depthMarker;
-    private readonly Line? _nextLine;
-
-    /// <summary>
-    /// Creates a line that represents a file or a folder. The line has depth that
-    /// describes it's nesting in files hierarchy
-    /// </summary>
-    /// <param name="line">String representation of a line</param>
-    /// <param name="depthMarker">
-    /// Marker that describes a depth of a file/folder, described by the line.
-    /// The more markers contains the string representation, the more depth it gets
-    /// </param>
-    public Line(string line, char depthMarker = '-', Line? nextLine = null)
-    {
-        _line = line;
-        _depthMarker = depthMarker;
-        _nextLine = nextLine;
-    }
-
-    /// <summary>
-    /// The name of the line
-    /// </summary>
-    public string Name =>
-        _line.Trim().Replace(_depthMarker.ToString(), string.Empty).Replace(" ", string.Empty);
-
-    /// <summary>
-    /// Depth in a file hierarchy of a file/folder that is described by the line
-    /// </summary>
-    public int Depth => _line.Where(c => c == _depthMarker).Count();
-
-    /// <summary>
-    /// Does the line represents a file
-    /// </summary>
-    /// <remarks>
-    /// Line represents a file if it's does not followed by line with bigger depth
-    /// </remarks>
-    public bool DoesRepresentFile()
-    {
-        if (_nextLine is null)
-            return true;
-
-        if (_nextLine.Depth == this.Depth)
-            return true;
-
-        if (_nextLine.Depth == this.Depth + 1)
-            return false;
-
-        throw new InvalidOperationException(
-            "Line can't be followed by other line with depth, bigger than one"
-        );
-    }
-}
-
-/// <summary>
-/// Empty fake file
-/// </summary>
-public class FakeFile
-{
-    private readonly DirectoryInfo _root;
-    private readonly string _filename;
-
-    /// <summary>
-    /// Initializes fake file
-    /// </summary>
-    /// <param name="root">Root of the file</param>
-    /// <param name="name">A full name of the file</param>
-    public FakeFile(DirectoryInfo root, string name)
-    {
-        _root = root;
-        _filename = name;
-    }
-
-    /// <summary>
-    /// Creates empty file
-    /// </summary>
-    public void Create()
-    {
-        if (string.IsNullOrWhiteSpace(_filename))
-            throw new InvalidOperationException("A filename must not be empty");
-
-        File.Create(Path.Combine(_root.FullName, _filename));
     }
 }
