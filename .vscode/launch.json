@@ -1,0 +1,19 @@
+{
+    "$schema": "https://raw.githubusercontent.com/mfussenegger/dapconfig-schema/master/dapconfig-schema.json",
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "coreclr",
+            "request": "attach",
+            "name": "Attach to .NET application",
+            "processId": "${input:processIdInput}"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "processIdInput",
+            "type": "promptString",
+            "description": "Enter process ID to attach to: "
+        }
+    ]
+}

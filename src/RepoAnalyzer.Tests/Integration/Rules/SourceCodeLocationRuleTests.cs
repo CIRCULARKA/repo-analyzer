@@ -2,16 +2,26 @@ namespace RepoAnalyzer.Tests.Integration.Rules;
 
 public class SourceCodeLocationRuleTests
 {
-    public IEnumerable<object[]> TestData_ValidFileStructure =>
+    private readonly ITestOutputHelper _logger;
+
+    public SourceCodeLocationRuleTests(ITestOutputHelper logger)
+    {
+        _logger = logger;
+    }
+
+    public static IEnumerable<object[]> TestData_ValidFileStructure =>
         new List<object[]>
         {
+            // new object[]
+            // {
+            //     @"
+            //         README.md
+            //         src
+            //         - Program.cs
+            //     ",
+            // },
             new object[]
             {
-                @"
-                    README.md
-                    src
-                    - Program.cs
-                ",
                 @"
                     README.md
                     src
@@ -23,30 +33,38 @@ public class SourceCodeLocationRuleTests
                     assets
                     - image.png
                 ",
-            }
+            },
         };
 
-    // [Theory]
-    public async Task Apply_CalledOnValidFiles_ReturnsSuccess()
+    [Theory]
+    [MemberData(nameof(TestData_ValidFileStructure))]
+    public void Apply_CalledOnValidFiles_ReturnsSuccess(string hierarchy)
     {
-
+        // Arrange
+        // var lines = hierarchy.Split(Environment.NewLine).Where(l => string.IsNullOrWhiteSpace(l) is false).Select(l => l.Trim());
+        // int i = 0;
+        // foreach (var l in lines)
+        // {
+        //     i++;
+        //     _logger.WriteLine(i + ": " + l);
+        // }
+        CreateFakeFiles(hierarchy);
     }
 
     /// <summary>
-    /// Converts string representation of a file structure into hierarchy of files
+    /// Creates file according to specified hierarchy
     /// </summary>
-    /// <param name="fileStructure">File structures in string representation</param>
-    /// <remarks>
-    /// Valid string representation is:
-    /// file.ext
-    /// folder1
-    /// - file1
-    /// - file2
-    /// - subfolder1
-    /// -- subfolderfile1
-    /// ...
-    /// </remarks>
-    private IDirectoryInfo ConvertToDirectoryInfo(string fileStructure)
-    {
-    }
+    /// <param name="hierarchy">Files hierarchy</param>
+    private void CreateFakeFiles(string hierarchy) =>
+        new FakeFilesHierarchy(
+            new FakeFiles(
+                hierarchy
+                    .Split(Environment.NewLine)
+                    .Where(l => string.IsNullOrWhiteSpace(l) is false)
+                    .Select(l => l.Trim())
+                    .ToArray(),
+                '-'
+            ),
+            "/home/ruslan/Desktop/test"
+        ).InitializeHierarchy();
 }
