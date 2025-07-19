@@ -57,7 +57,7 @@ public class SourceCodeLocationRuleTests
     /// <param name="hierarchy">Files hierarchy</param>
     private void CreateFakeFiles(string hierarchy) =>
         new FakeFilesHierarchy(
-            new FakeFiles(
+            new TestFilesystemItems(
                 hierarchy
                     .Split(Environment.NewLine)
                     .Where(l => string.IsNullOrWhiteSpace(l) is false)

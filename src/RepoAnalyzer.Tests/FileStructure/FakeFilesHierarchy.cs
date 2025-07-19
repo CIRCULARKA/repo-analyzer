@@ -5,7 +5,7 @@ namespace RepoAnalyzer.Tests.FileStructure;
 /// </summary>
 public class FakeFilesHierarchy
 {
-    private readonly FakeFiles _lines;
+    private readonly TestFilesystemItems _lines;
     private readonly string _location;
 
     /// <summary>
@@ -25,7 +25,7 @@ public class FakeFilesHierarchy
     ///     ...
     /// "
     /// </remarks>
-    public FakeFilesHierarchy(FakeFiles lines, string location)
+    public FakeFilesHierarchy(TestFilesystemItems lines, string location)
     {
         _lines = lines;
         _location = location;
@@ -45,7 +45,7 @@ public class FakeFilesHierarchy
     /// <param name="lines">Lines that descibe files and folders</param>
     /// <param name="root">Location relative to files should be created</param>
     /// <param name="depth">Depth of files in files hierarchy</param>
-    private void CreateFilesAndFolders(FakeFiles lines, string root, int depth)
+    private void CreateFilesAndFolders(TestFilesystemItems lines, string root, int depth)
     {
         var currentDepthFiles = lines.Where(l => l.DoesRepresentFile() && depth == l.Depth).ToArray();
 
