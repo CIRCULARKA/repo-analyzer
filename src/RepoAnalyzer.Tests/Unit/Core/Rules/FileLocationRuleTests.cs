@@ -27,6 +27,5 @@ public class FileLocationRuleTests
 
         // Act
         // TODO: Stopped here!
-        rule.Apply()
     }
 }
