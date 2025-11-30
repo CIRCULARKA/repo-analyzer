@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoAnalyzer", "RepoAnalyzer\RepoAnalyzer.csproj", "{2F8384E5-CA05-4588-8191-BE30A9D62142}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoAnalyzer", "src/RepoAnalyzer\RepoAnalyzer.csproj", "{2F8384E5-CA05-4588-8191-BE30A9D62142}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoAnalyzer.Tests", "RepoAnalyzer.Tests\RepoAnalyzer.Tests.csproj", "{9739AE9E-0C1F-4F72-8BDF-AF2A4899FBD4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoAnalyzer.Tests", "src/RepoAnalyzer.Tests\RepoAnalyzer.Tests.csproj", "{9739AE9E-0C1F-4F72-8BDF-AF2A4899FBD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoAnalyzer.Core", "RepoAnalyzer.Core\RepoAnalyzer.Core.csproj", "{12E2DEB0-CA53-4BD2-8E2D-A7F8F7B95251}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoAnalyzer.Core", "src/RepoAnalyzer.Core\RepoAnalyzer.Core.csproj", "{12E2DEB0-CA53-4BD2-8E2D-A7F8F7B95251}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
