@@ -1,5 +1,9 @@
 # repo-analyzer -- CI tool for repository rules enforcement
 
+## Overview
+
+### Idea
+
 The idea behind the tool is to make CI more convenient to configure for many repositories in organization.
 
 The tool will be accepting some configuration files that must describe some rules for the repository being checked
@@ -16,7 +20,9 @@ as it's possible.
 
 I want this tool to be integrated in CI as simple as possible:
 - Without need to setup environment (self contained executable)
-- Crossplatoform
+- Crossplatform support
+
+### Usage
 
 I see the usage of the tool in CI in this way:
 
@@ -37,3 +43,7 @@ With output similar to:
 
 Exit Code 1
 ```
+
+## Contribution
+
+To be done.
