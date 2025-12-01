@@ -5,15 +5,19 @@ namespace RepoAnalyzer.Core.Rules.FileLocation;
 /// </summary>
 public class FileLocationRule : IRule
 {
-    public FileLocationRule(IPath filePath)
+    /// <summary>
+    /// Creates file location rule
+    /// </summary>
+    /// <param name="locationRegex">Regex for searched file path</param>
+    public FileLocationRule(Regex locationRegex)
     {
-        DesiredLocation = filePath;
+        LocationRegex = locationRegex;
     }
 
     /// <summary>
-    /// Path at which file must exist
+    /// Regex that target file's path must match
     /// </summary>
-    public IPath DesiredLocation { get; }
+    public Regex LocationRegex { get; }
 
     /// <inheritdoc />
     /// <returns>
@@ -22,7 +26,9 @@ public class FileLocationRule : IRule
     /// </returns>
     public IRuleResult Apply(IRepository repo)
     {
-        var fileAtLocation = repo.Files.FirstOrDefault(f => f.Location == DesiredLocation);
+        var fileAtLocation = repo.Files.FirstOrDefault(f =>
+            LocationRegex.Match(f.Location.Value).Success
+        );
         if (fileAtLocation is null)
             return new LocationNotValidatedRuleResult { Rule = this };
         else

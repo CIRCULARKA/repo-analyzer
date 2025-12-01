@@ -5,11 +5,11 @@ namespace RepoAnalyzer.Core;
 /// </summary>
 public class File
 {
-    public File(IPath path, string content)
+    public File(IPath location, string content)
     {
         ArgumentNullException.ThrowIfNull(content);
 
-        Location = path;
+        Location = location;
         Content = content;
     }
 
