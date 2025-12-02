@@ -14,6 +14,8 @@ public class FileLocationRule : IRule
         LocationRegex = locationRegex;
     }
 
+    public RuleType Type => RuleType.FileLocation;
+
     /// <summary>
     /// Regex that target file's path must match
     /// </summary>

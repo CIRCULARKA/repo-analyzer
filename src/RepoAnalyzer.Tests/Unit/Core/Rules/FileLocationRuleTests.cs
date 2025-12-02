@@ -57,6 +57,19 @@ public class FileLocationRuleTests
             new object[] { new TestRepository(), new Regex(".*target_filename\\.txt.*") },
         };
 
+    [Fact]
+    public void Type_CalledOnRule_ReturnsFileLocationType()
+    {
+        // Arrange
+        var rule = new FileLocationRule(new Regex("hello"));
+
+        // Act
+        var actualType = rule.Type;
+
+        // Assert
+        Assert.Equal(RuleType.FileLocation, actualType);
+    }
+
     [Theory]
     [MemberData(nameof(TestData_PositiveCases))]
     public void Apply_ThereIsMatchingFileInRepository_ReturnsSuccessfulResult(

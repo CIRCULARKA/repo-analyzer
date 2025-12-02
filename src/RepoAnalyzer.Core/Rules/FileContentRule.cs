@@ -14,6 +14,8 @@ public class FileContentRule : IRule
         _regex = contentRegex;
     }
 
+    public RuleType Type => RuleType.FileContent;
+
     public IRuleResult Apply(IRepository repo)
     {
         var locationResult = _locationRule.Apply(repo);
