@@ -1,0 +1,13 @@
+rulesets:
+  - type: fileContent
+    name: Company-wide .editorconfig
+    description: Ensures presence of .editorconfig in repository's root
+    errorMessage: There is no company-wide .editorconfig file in the root of the repo
+    filePath:
+      type: regex
+      value: ^.editorconfig$
+    fileContent:
+      type: equalToFile
+      contentFilePath: /var/conventions/.editorconfig
+    options:
+      faileFast: true
