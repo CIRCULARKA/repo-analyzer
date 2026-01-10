@@ -3,6 +3,7 @@
 /// <summary>
 /// A DTO of a rule from a ruleset
 /// </summary>
+/// TODO: Stopped at making DTO for ruleset format
 public class RuleDto
 {
     /// <summary>
