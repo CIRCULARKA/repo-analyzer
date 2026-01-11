@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RepoAnalyzer.Core\RepoAnalyzer.Core.csproj" />
+    <ProjectReference Include="..\RepoAnalyzer.RulesetParsing\RepoAnalyzer.RulesetParsing.csproj" />
   </ItemGroup>
 
 </Project>

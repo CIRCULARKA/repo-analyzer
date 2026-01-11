@@ -8,6 +8,6 @@ rulesets:
       value: ^.editorconfig$
     fileContent:
       type: equalToFile
-      contentFilePath: /var/conventions/.editorconfig
+      value: /var/conventions/.editorconfig
     options:
-      faileFast: true
+      failFast: true

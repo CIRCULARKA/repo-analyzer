@@ -5,5 +5,6 @@ global using Moq;
 global using RepoAnalyzer.Core;
 global using RepoAnalyzer.Core.Rules;
 global using RepoAnalyzer.Core.Rules.FileLocation;
+global using RepoAnalyzer.RulesetParsing;
 global using TruePath;
 global using Xunit.Abstractions;
