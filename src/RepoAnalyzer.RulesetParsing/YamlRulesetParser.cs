@@ -10,5 +10,7 @@ public class YamlRulesetParser
         var deserialiser = new DeserializerBuilder().WithCaseInsensitivePropertyMatching().Build();
         var dto = deserialiser.Deserialize<RulesetDto>(yaml);
 
+        // TODO: Convert DTO to domain Ruleset
+        throw new NotImplementedException();
     }
 }
